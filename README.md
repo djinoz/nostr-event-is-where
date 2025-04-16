@@ -1,6 +1,8 @@
 # Nostr Event Locator
 
-A simple web application to check multiple Nostr relays to find if a specific event ID is present.
+I was trying to understand the nostr concept of "no global state" and particularly because I was lazy about selecting relays. So this utility lets a user check where an event/note is located.
+
+Its a simple web application you can run locally to check multiple Nostr relays to find if a specific event ID is present. If there is a relay that you want to publish to, then you get a button to submit the event again to that relay - you can do this multiple times.
 
 ## Features
 
@@ -10,6 +12,7 @@ A simple web application to check multiple Nostr relays to find if a specific ev
 - Real-time progress updates
 - View event details when found
 - Runs locally with npm's http-server
+- Publish the event to a specific relay if it isn't already "Found"
 
 ## Usage
 
@@ -17,10 +20,13 @@ A simple web application to check multiple Nostr relays to find if a specific ev
 2. Customize the relay list if needed (default list provided)
 3. Click "Check Relays" to search for the event
 4. View results showing which relays have the event
+5. Publish to a relay with one-click
 
 ## Running Locally
 
 To run this application locally:
+
+git clone https://github.com/djinoz/nostr-event-is-where.git
 
 ```bash
 # Install http-server if you don't have it
