@@ -26,9 +26,10 @@ Its a simple web application you can run locally to check multiple Nostr relays 
 
 To run this application locally:
 
+```bash
+
 git clone https://github.com/djinoz/nostr-event-is-where.git
 
-```bash
 # Install http-server if you don't have it
 npm install -g http-server
 
