@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nostr Event Locator</title>
+  <meta name="description" content="Check multiple Nostr relays to find if a specific event_id is present">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Nostr Event Locator</h1>
+      <p>Check multiple relays to find if a specific event is present</p>
+    </header>
+
+    <section class="input-section">
+      <div class="input-box">
+        <h2>Input Parameters</h2>
+        <form id="locator-form">
+          <div class="form-group">
+            <label for="event-id">Nostr Event ID (note or hex)</label>
+            <input type="text" id="event-id" name="event-id" placeholder="note1... or hex..." required>
+          </div>
+          
+          <div class="form-group">
+            <label for="relays">Relay List (comma separated)</label>
+            <textarea id="relays" name="relays" rows="3" placeholder="wss://relay1.com, wss://relay2.com, ..."></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" id="fetch-button">Check Relays</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="status-section" id="status-section" style="display: none;">
+      <div class="status-box">
+        <div class="status-info">
+          <p id="status-message">Checking relays...</p>
+          <progress id="fetch-progress" max="100" value="0"></progress>
+        </div>
+        <div class="status-details">
+          <p id="connected-relays">Connected relays: 0/0</p>
+          <p id="event-found">Event found: No</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section" id="results-section" style="display: none;">
+      <div class="results-box">
+        <div class="results-header">
+          <h2>Results</h2>
+        </div>
+        
+        <div class="relay-results" id="relay-results">
+          <!-- Relay results will be displayed here -->
+        </div>
+
+        <div class="event-details" id="event-details" style="display: none;">
+          <h3>Event Details</h3>
+          <pre id="event-json"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="error-section" id="error-section" style="display: none;">
+      <div class="error-box">
+        <h2>Error</h2>
+        <p id="error-message"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- External Libraries -->
+  <script src="https://bundle.run/buffer@6.0.3"></script>
+  <script src="https://bundle.run/bech32@2.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nostr-tools@1.17.0/lib/nostr.bundle.min.js"></script>
+  
+  <!-- Application Scripts -->
+  <script src="js/relays.js"></script>
+  <script src="js/event-finder.js"></script>
+  <script src="js/event-display.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
