@@ -4,8 +4,8 @@
  */
 
 /**
- * Normalize event ID (convert note1 to hex format if needed)
- * @param {string} eventId - The event ID (note1 or hex)
+ * Normalize event ID (convert note1 or nevent1 to hex format if needed)
+ * @param {string} eventId - The event ID (note1, nevent1, or hex)
  * @returns {string} The event ID in hex format
  */
 function normalizeEventId(eventId) {
@@ -25,6 +25,16 @@ function normalizeEventId(eventId) {
       return data;
     } catch (error) {
       throw new Error('Invalid note1 format');
+    }
+  }
+  
+  // If it's a nevent1 format
+  if (eventId.startsWith('nevent1')) {
+    try {
+      const decoded = window.NostrTools.nip19.decode(eventId);
+      return decoded.data.id;
+    } catch (error) {
+      throw new Error('Invalid nevent1 format');
     }
   }
   
