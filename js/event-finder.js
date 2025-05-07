@@ -4,8 +4,8 @@
  */
 
 /**
- * Normalize event ID (convert note1 or nevent1 to hex format if needed)
- * @param {string} eventId - The event ID (note1, nevent1, or hex)
+ * Normalize event ID (convert note1, nevent1, or naddr1 to hex format if needed)
+ * @param {string} eventId - The event ID (note1, nevent1, naddr1, or hex)
  * @returns {string} The event ID in hex format
  */
 function normalizeEventId(eventId) {
@@ -35,6 +35,28 @@ function normalizeEventId(eventId) {
       return decoded.data.id;
     } catch (error) {
       throw new Error('Invalid nevent1 format');
+    }
+  }
+  
+  // If it's a naddr1 format
+  if (eventId.startsWith('naddr1')) {
+    try {
+      const decoded = window.NostrTools.nip19.decode(eventId);
+      
+      // Ensure we have the required data for naddr1
+      if (!decoded.data || !decoded.data.kind || !decoded.data.pubkey || decoded.data.identifier === undefined) {
+        throw new Error('Missing required naddr1 data (kind, pubkey, or identifier)');
+      }
+      
+      // For naddr lookups, we'll use a different approach
+      // but to keep the API consistent, we'll return a special marker
+      // that will be recognized in the checkRelay function
+      return {
+        type: 'naddr',
+        data: decoded.data
+      };
+    } catch (error) {
+      throw new Error(`Invalid naddr1 format: ${error.message}`);
     }
   }
   
@@ -137,7 +159,7 @@ function submitEventToRelay(relay, event) {
 /**
  * Check a single relay for an event
  * @param {string} relay - The relay URL
- * @param {string} eventId - The event ID in hex format
+ * @param {string|Object} eventId - The event ID in hex format or a naddr object
  * @returns {Promise<Object>} A promise that resolves to the result object
  */
 function checkRelay(relay, eventId) {
@@ -181,12 +203,26 @@ function checkRelay(relay, eventId) {
       
       // Connect to the relay
       relayInstance.connect().then(() => {
-        // Create a subscription for the specific event
-        const sub = relayInstance.sub([
-          {
+        let filter;
+        
+        // Check if this is a naddr or regular event ID
+        if (typeof eventId === 'object' && eventId.type === 'naddr') {
+          // Handle naddr lookups using the appropriate filter
+          const { kind, pubkey, identifier } = eventId.data;
+          filter = [{
+            kinds: [kind],
+            authors: [pubkey],
+            '#d': [identifier || ''] // Use empty string if identifier is empty
+          }];
+        } else {
+          // Regular event ID lookup
+          filter = [{
             ids: [eventId]
-          }
-        ]);
+          }];
+        }
+        
+        // Create a subscription for the specific event
+        const sub = relayInstance.sub(filter);
         
         // Handle events
         sub.on('event', (event) => {

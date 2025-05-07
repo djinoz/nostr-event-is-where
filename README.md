@@ -7,7 +7,7 @@ Its a simple web application you can run locally to check multiple Nostr relays 
 ## Features
 
 - Check multiple Nostr relays for a specific event
-- Input event IDs in both note1 and hex formats
+- Input event IDs in note1, nevent1, naddr1, and hex formats
 - Customizable relay list
 - Real-time progress updates
 - View event details when found
@@ -16,7 +16,7 @@ Its a simple web application you can run locally to check multiple Nostr relays 
 
 ## Usage
 
-1. Enter a Nostr event ID (note1 or hex format)
+1. Enter a Nostr event ID (note1, nevent1, naddr1, or hex format)
 2. Customize the relay list if needed (default list provided)
 3. Click "Check Relays" to search for the event
 4. View results showing which relays have the event
